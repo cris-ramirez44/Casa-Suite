@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Test de Dones · Casa Nueva</title>
+  <meta name="description" content="Descubrí los dones que Dios te dio y dónde podés servir en Casa Nueva." />
+  <meta name="theme-color" content="#0b1640" />
+  <meta property="og:title" content="Test de Dones · Casa Nueva" />
+  <meta property="og:description" content="Descubrí los dones que Dios te dio y dónde podés servir en Casa Nueva." />
+  <meta property="og:image" content="assets/og.jpg" />
+  <link rel="icon" type="image/png" href="assets/isologo.png" />
+  <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <!-- INICIO -->
+  <main id="inicio" class="vista" hidden>
+    <section class="hero">
+      <img class="logo-hero" src="assets/logo-blanco.png" alt="Casa Nueva" width="900" height="312" />
+      <p class="eyebrow">Test de dones</p>
+      <h1>Descubrí cómo Dios <span>te diseñó</span> para servir.</h1>
+      <p class="lead">70 afirmaciones · unos 6 minutos · resultado al instante, con tus dones principales y tres áreas de Casa Nueva donde podrías servir.</p>
+
+      <div class="card intro">
+        <label class="campo" for="nombre">
+          <span>Tu nombre <em>(opcional)</em></span>
+          <input id="nombre" type="text" autocomplete="given-name" maxlength="60" placeholder="¿Cómo te llamás?" />
+        </label>
+
+        <div id="reanudar" class="reanudar" hidden>
+          <p>Tenés un test empezado: <strong id="reanudar-progreso"></strong>.</p>
+          <div class="fila">
+            <button class="btn primario" id="btn-continuar">Continuar</button>
+            <button class="btn fantasma" id="btn-reiniciar">Empezar de nuevo</button>
+          </div>
+        </div>
+        <button class="btn primario grande" id="btn-empezar">Empezar el test</button>
+      </div>
+
+      <details class="card como">
+        <summary>Antes de empezar <span class="chev" aria-hidden="true"></span></summary>
+        <ul>
+          <li><strong>No hay respuestas buenas ni malas.</strong> Respondé según lo que ves en vos, no según lo que te gustaría ser o creés que deberías ser.</li>
+          <li><strong>No lo pienses mucho:</strong> la primera impresión es la que vale.</li>
+          <li>Podés usar <strong>«Algunas veces» como máximo 15 veces</strong>. Te vamos llevando la cuenta.</li>
+          <li>Es <strong>orientativo</strong>: una aproximación para ayudarte a buscar tus dones, no un resultado absoluto.</li>
+          <li>Si cerrás la página, tu avance queda guardado en este dispositivo.</li>
+        </ul>
+      </details>
+
+      <button class="link" id="btn-ejemplo">Ver un resultado de ejemplo</button>
+    </section>
+  </main>
+
+  <!-- PREGUNTAS -->
+  <main id="test" class="vista" hidden>
+    <header class="barra">
+      <button class="icono" id="btn-atras" aria-label="Afirmación anterior">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <img class="iso" src="assets/isologo-blanco.png" alt="" width="28" height="28" />
+      <div class="contador-3" id="contador-3" title="Respuestas «Algunas veces» usadas">
+        <span class="tres">3</span><span id="contador-3-texto">0/15</span>
+      </div>
+    </header>
+    <div class="progreso" role="progressbar" aria-valuemin="0" aria-valuemax="70" id="progreso"><div id="progreso-barra"></div></div>
+
+    <section class="pregunta-wrap">
+      <article class="card pregunta" id="pregunta" aria-live="polite">
+        <p class="num" id="num"></p>
+        <h2 id="afirmacion"></h2>
+      </article>
+      <div class="opciones" id="opciones" role="radiogroup" aria-label="Frecuencia"></div>
+      <p class="aviso-3" id="aviso-3" hidden></p>
+      <button class="btn claro" id="btn-ir-final" hidden>Ya respondí todo · ir a mis resultados</button>
+      <p class="atajo">En compu: teclas <kbd>1</kbd>–<kbd>5</kbd> para responder y <kbd>←</kbd> para volver.</p>
+    </section>
+  </main>
+
+  <!-- PASO FINAL -->
+  <main id="final" class="vista" hidden>
+    <section class="hero chico">
+      <img class="iso-grande" src="assets/isologo-blanco.png" alt="" width="64" height="64" />
+      <p class="eyebrow">¡Listo, respondiste las 70!</p>
+      <h1>Un último detalle <span>(opcional)</span></h1>
+      <p class="lead">Algunas áreas necesitan además una habilidad concreta. Marcá las que tengas para afinar la sugerencia.</p>
+      <div class="chips" id="habilidades"></div>
+      <button class="btn primario grande" id="btn-resultados">Ver mis resultados</button>
+      <button class="link" id="btn-revisar">Volver a revisar mis respuestas</button>
+    </section>
+  </main>
+
+  <!-- RESULTADOS -->
+  <main id="resultados" class="vista" hidden>
+    <section class="res-hero">
+      <img class="logo-res" src="assets/logo-blanco.png" alt="Casa Nueva" width="900" height="312" />
+      <p class="eyebrow" id="res-fecha"></p>
+      <h1 id="res-titulo">Tus dones</h1>
+      <p class="banner-ejemplo" id="banner-ejemplo" hidden>Resultado de ejemplo, con respuestas al azar.</p>
+    </section>
+
+    <section class="bloque">
+      <h2 class="titulo-bloque"><span>01</span> Tus dones principales</h2>
+      <p class="nota-empate" id="nota-empate" hidden></p>
+      <div class="top-dones" id="top-dones"></div>
+    </section>
+
+    <section class="bloque">
+      <h2 class="titulo-bloque"><span>02</span> Dónde podrías servir en Casa Nueva</h2>
+      <div class="areas" id="areas"></div>
+    </section>
+
+    <section class="bloque">
+      <h2 class="titulo-bloque"><span>03</span> Tus 14 dones, de mayor a menor</h2>
+      <div class="card ranking" id="ranking"></div>
+      <details class="card detalle">
+        <summary>Ver el detalle (Cuadro 2) <span class="chev" aria-hidden="true"></span></summary>
+        <div class="tabla-scroll"><table id="tabla"></table></div>
+      </details>
+    </section>
+
+    <section class="bloque acciones">
+      <button class="btn primario grande" id="btn-compartir">Compartir con mi líder</button>
+      <div class="fila">
+        <button class="btn claro" id="btn-imprimir">Guardar en PDF</button>
+        <button class="btn claro" id="btn-otra-vez">Hacer el test de nuevo</button>
+      </div>
+      <p class="disclaimer">Este test es una orientación para ayudarte a descubrir los dones que Dios te dio; no es un absoluto. Conversalo con tus líderes: el servicio también se descubre sirviendo.</p>
+      <img class="iso-pie" src="assets/isologo-blanco.png" alt="" width="40" height="40" />
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
