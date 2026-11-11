@@ -25,10 +25,22 @@
       <p class="lead">70 afirmaciones · unos 6 minutos · resultado al instante, con tus dones principales y tres áreas de Casa Nueva donde podrías servir.</p>
 
       <div class="card intro">
-        <label class="campo" for="nombre">
-          <span>Tu nombre <em>(opcional)</em></span>
-          <input id="nombre" type="text" autocomplete="given-name" maxlength="60" placeholder="¿Cómo te llamás?" />
+        <div class="campos-fila">
+          <label class="campo" for="nombre">
+            <span>Nombre</span>
+            <input id="nombre" type="text" autocomplete="given-name" maxlength="60" placeholder="Tu nombre" />
+          </label>
+          <label class="campo" for="apellido">
+            <span>Apellido</span>
+            <input id="apellido" type="text" autocomplete="family-name" maxlength="60" placeholder="Tu apellido" />
+          </label>
+        </div>
+        <label class="campo" for="celular">
+          <span>Celular</span>
+          <input id="celular" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="Ej.: 351 123 4567" />
         </label>
+        <p class="ayuda">Todo es <strong>opcional</strong>. Si nos dejás tus datos, el equipo de Casa Nueva puede acompañarte a encontrar tu lugar para servir. Tu resultado solo lo ven los pastores y el equipo que coordina las áreas.</p>
+        <input class="trampa" id="website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
         <div id="reanudar" class="reanudar" hidden>
           <p>Tenés un test empezado: <strong id="reanudar-progreso"></strong>.</p>
@@ -128,6 +140,7 @@
         <button class="btn claro" id="btn-imprimir">Guardar en PDF</button>
         <button class="btn claro" id="btn-otra-vez">Hacer el test de nuevo</button>
       </div>
+      <p class="envio" id="envio" hidden></p>
       <p class="disclaimer">Este test es una orientación para ayudarte a descubrir los dones que Dios te dio; no es un absoluto. Conversalo con tus líderes: el servicio también se descubre sirviendo.</p>
       <img class="iso-pie" src="assets/isologo-blanco.png" alt="" width="40" height="40" />
     </section>

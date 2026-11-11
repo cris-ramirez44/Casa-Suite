@@ -3,6 +3,13 @@
   const T = window.TEST;
   const N = T.afirmaciones.length; // 70
   const CLAVE = "casanueva.testDones.v1";
+  // Envío del resultado a Casa Suite (los pastores y administración lo ven en Personas → Test de dones).
+  const ENDPOINT = "https://somoscasasuite.app/api/publico/test-dones";
+  const VERSION_TEST = 1;
+  const uuid = () =>
+    (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => { const r = (Math.random() * 16) | 0; return (c === "x" ? r : (r & 3) | 8).toString(16); });
   const $ = (id) => document.getElementById(id);
 
   // ---------- Estado ----------
@@ -11,12 +18,15 @@
   let avanzando = false;
 
   function nuevoEstado() {
-    return { nombre: "", respuestas: Array(N).fill(0), indice: 0, habilidades: [], terminado: false };
+    return { nombre: "", apellido: "", celular: "", respuestas: Array(N).fill(0), indice: 0, habilidades: [], terminado: false, clave: uuid(), enviado: false };
   }
   function cargar() {
     try {
       const s = JSON.parse(localStorage.getItem(CLAVE));
-      if (s && Array.isArray(s.respuestas) && s.respuestas.length === N) return s;
+      if (s && Array.isArray(s.respuestas) && s.respuestas.length === N) {
+        if (!s.clave) s.clave = uuid();
+        return { apellido: "", celular: "", enviado: false, ...s };
+      }
     } catch (_) { /* sin almacenamiento */ }
     return null;
   }
@@ -37,6 +47,8 @@
   // ---------- Inicio ----------
   function iniciarVistaInicio() {
     $("nombre").value = estado.nombre || "";
+    $("apellido").value = estado.apellido || "";
+    $("celular").value = estado.celular || "";
     const n = respondidas();
     const hayAvance = n > 0;
     $("reanudar").hidden = !hayAvance;
@@ -45,7 +57,10 @@
     $("btn-continuar").textContent = estado.terminado ? "Ver mi resultado" : "Continuar";
     mostrar("inicio");
   }
-  $("nombre").addEventListener("input", (e) => { estado.nombre = e.target.value.trim(); guardar(); });
+  [["nombre", "nombre"], ["apellido", "apellido"], ["celular", "celular"]].forEach(([id, campo]) => {
+    $(id).addEventListener("input", (e) => { estado[campo] = e.target.value.trim(); guardar(); });
+  });
+  const datosPersonales = () => ({ nombre: $("nombre").value.trim(), apellido: $("apellido").value.trim(), celular: $("celular").value.trim() });
   $("btn-empezar").addEventListener("click", () => { ejemplo = false; estado.indice = 0; guardar(); irATest(); });
   $("btn-continuar").addEventListener("click", () => {
     ejemplo = false;
@@ -55,8 +70,7 @@
     irATest();
   });
   $("btn-reiniciar").addEventListener("click", () => {
-    const nombre = $("nombre").value.trim();
-    estado = nuevoEstado(); estado.nombre = nombre; guardar(); irATest();
+    estado = { ...nuevoEstado(), ...datosPersonales() }; guardar(); irATest();
   });
   $("btn-ejemplo").addEventListener("click", verEjemplo);
 
@@ -176,7 +190,7 @@
     chipsEl.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(estado.habilidades.includes(b.dataset.id))));
     mostrar("final");
   }
-  $("btn-resultados").addEventListener("click", () => { estado.terminado = true; guardar(); verResultados(); });
+  $("btn-resultados").addEventListener("click", () => { estado.terminado = true; guardar(); verResultados(); enviar(); });
   $("btn-revisar").addEventListener("click", () => { estado.indice = 0; irATest(); });
 
   // ---------- Cálculo ----------
@@ -239,6 +253,8 @@
     $("res-titulo").innerHTML = nombre ? `${esc(nombre)}, <b>estos son tus dones</b>` : `Estos son <b>tus dones</b>`;
     $("res-fecha").textContent = new Date().toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
     $("banner-ejemplo").hidden = !ejemplo;
+    $("envio").hidden = !(estado.enviado && !ejemplo && (estado.nombre || estado.celular));
+    $("envio").textContent = "✓ Tu resultado le llegó al equipo de Casa Nueva.";
 
     // Top
     const nota = $("nota-empate");
@@ -329,8 +345,7 @@
   $("btn-otra-vez").addEventListener("click", () => {
     if (ejemplo) { ejemplo = false; estado = cargar() || nuevoEstado(); return iniciarVistaInicio(); }
     if (!confirm("¿Querés borrar tus respuestas y hacer el test de nuevo?")) return;
-    const nombre = estado.nombre;
-    estado = nuevoEstado(); estado.nombre = nombre; guardar();
+    estado = { ...nuevoEstado(), nombre: estado.nombre, apellido: estado.apellido, celular: estado.celular }; guardar();
     iniciarVistaInicio();
   });
 
@@ -351,13 +366,48 @@
       if (v === 3 && ++tres > T.maxAlgunasVeces) v = 2;
       return v;
     });
-    estado = { nombre: "Ejemplo", respuestas, indice: N - 1, habilidades: ["chicos"], terminado: true };
+    estado = { nombre: "Ejemplo", apellido: "", celular: "", respuestas, indice: N - 1, habilidades: ["chicos"], terminado: true, clave: "", enviado: true };
     verResultados();
     toast("Este es un resultado de ejemplo");
+  }
+
+  // ---------- Envío a Casa Suite ----------
+  // Silencioso: si falla (sin conexión, servidor caído) el resultado igual se muestra y se reintenta al volver a abrir.
+  let enviando = false;
+  async function enviar() {
+    if (ejemplo || estado.enviado || enviando || estado.respuestas.some((r) => !r)) return;
+    enviando = true;
+    const cuerpo = {
+      submissionKey: estado.clave,
+      givenName: estado.nombre || undefined,
+      familyName: estado.apellido || undefined,
+      phone: estado.celular || undefined,
+      answers: estado.respuestas,
+      skills: estado.habilidades,
+      definitionVersion: VERSION_TEST,
+      website: $("website").value || undefined,
+    };
+    try {
+      const res = await fetch(ENDPOINT, { method: "POST", headers: { "content-type": "text/plain;charset=UTF-8" }, body: JSON.stringify(cuerpo), mode: "cors", credentials: "omit", keepalive: true });
+      if (res.ok) {
+        estado.enviado = true;
+        guardar();
+        const aviso = $("envio");
+        if (!$("resultados").hidden && (estado.nombre || estado.celular)) {
+          aviso.textContent = "✓ Tu resultado le llegó al equipo de Casa Nueva.";
+          aviso.hidden = false;
+        }
+      } else if (res.status === 422) {
+        estado.enviado = true; // datos que el servidor no acepta: no se reintenta para siempre
+        guardar();
+      }
+    } catch (_) { /* sin conexión: se reintenta en la próxima visita */ }
+    enviando = false;
   }
 
   // ---------- Arranque ----------
   if (new URLSearchParams(location.search).has("ejemplo")) verEjemplo();
   else if (estado.terminado && location.hash === "#resultado") verResultados();
   else iniciarVistaInicio();
+  if (!ejemplo && estado.terminado && !estado.enviado) enviar();
 })();
