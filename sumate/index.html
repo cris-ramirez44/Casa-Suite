@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>¡Sumate! · Casa Nueva</title>
+  <meta name="description" content="Decidí ser parte de Casa Nueva y de lo que Dios está haciendo en medio nuestro." />
+  <meta name="theme-color" content="#0b1640" />
+  <meta property="og:title" content="¡Sumate! · Casa Nueva" />
+  <meta property="og:description" content="Decidí ser parte de Casa Nueva y de lo que Dios está haciendo en medio nuestro." />
+  <meta property="og:image" content="assets/og.jpg" />
+  <link rel="icon" type="image/png" href="assets/isologo.png" />
+  <link rel="apple-touch-icon" href="assets/apple-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <main id="formulario" class="vista">
+    <section class="hero">
+      <img class="logo-hero" src="assets/logo-blanco.png" alt="Casa Nueva" width="900" height="312" />
+      <p class="eyebrow">¡Sumate!</p>
+      <h1>Decidí ser parte de <span>Casa Nueva.</span></h1>
+      <p class="lead">Completar este formulario es mucho más que dar tus datos. Es tu decisión de ser parte de Casa Nueva y comprometerte a ser parte de lo que Dios está haciendo en medio nuestro.</p>
+    </section>
+
+    <form id="form" class="pasos" novalidate>
+      <div id="pendiente" class="aviso" hidden></div>
+
+      <!-- 1 · Datos -->
+      <section class="card bloque" aria-labelledby="t-datos">
+        <h2 id="t-datos"><span class="num">1</span> Tus datos</h2>
+        <div class="fila-2">
+          <label class="campo" for="nombre">
+            <span>Nombre</span>
+            <input id="nombre" name="nombre" type="text" autocomplete="given-name" maxlength="80" required />
+            <small class="error" data-para="givenName"></small>
+          </label>
+          <label class="campo" for="apellido">
+            <span>Apellido</span>
+            <input id="apellido" name="apellido" type="text" autocomplete="family-name" maxlength="80" required />
+            <small class="error" data-para="familyName"></small>
+          </label>
+        </div>
+        <label class="campo" for="celular">
+          <span>Número de celular</span>
+          <input id="celular" name="celular" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" placeholder="Ej.: 351 123 4567" required />
+          <small class="error" data-para="phone"></small>
+        </label>
+        <fieldset class="campo">
+          <legend>Fecha de cumpleaños</legend>
+          <div class="fecha">
+            <select id="dia" aria-label="Día" required><option value="">Día</option></select>
+            <select id="mes" aria-label="Mes" required><option value="">Mes</option></select>
+            <select id="anio" aria-label="Año" required><option value="">Año</option></select>
+          </div>
+          <small class="error" data-para="birthDate"></small>
+        </fieldset>
+      </section>
+
+      <!-- 2 · Bautismo -->
+      <section class="card bloque" aria-labelledby="t-bautismo">
+        <h2 id="t-bautismo"><span class="num">2</span> ¿Has dado el paso del bautismo?</h2>
+        <div class="opciones" role="radiogroup" aria-labelledby="t-bautismo">
+          <label class="opcion"><input type="radio" name="bautismo" value="QUIERE_BAUTIZARSE" /><span>Aún no: <b>¡quiero hacerlo!</b></span></label>
+          <label class="opcion"><input type="radio" name="bautismo" value="OTRA_IGLESIA" /><span><b>¡Sí!</b> Ya lo hice en otra iglesia</span></label>
+          <label class="opcion"><input type="radio" name="bautismo" value="CASA_NUEVA" /><span>Me bauticé en <b>Casa Nueva</b></span></label>
+        </div>
+        <small class="error" data-para="baptism"></small>
+        <label class="campo" for="detalle" id="detalle-campo" hidden>
+          <span>Contanos en qué iglesia y cuándo <em>(opcional)</em></span>
+          <input id="detalle" type="text" maxlength="300" placeholder="Ej.: Iglesia del Centro, 2018" />
+        </label>
+      </section>
+
+      <!-- 3 · Compromisos -->
+      <section class="card bloque" aria-labelledby="t-compromisos">
+        <h2 id="t-compromisos"><span class="num">3</span> Quiero ser parte de Casa Nueva y me comprometo a:</h2>
+        <div class="compromisos">
+          <label class="compromiso">
+            <input type="checkbox" name="compromiso" />
+            <span class="check" aria-hidden="true"></span>
+            <span><b>Proteger la unidad de la iglesia</b>, actuando con amor hacia los demás, evitando divisiones y chismes, y siguiendo a los líderes espirituales que Dios puso.</span>
+          </label>
+          <label class="compromiso">
+            <input type="checkbox" name="compromiso" />
+            <span class="check" aria-hidden="true"></span>
+            <span><b>Compartir la responsabilidad de la iglesia</b> orando por ella, invitando a otros a sumarse, dando la bienvenida e integrando a los que se van sumando.</span>
+          </label>
+          <label class="compromiso">
+            <input type="checkbox" name="compromiso" />
+            <span class="check" aria-hidden="true"></span>
+            <span><b>Servir en Casa Nueva</b> descubriendo mis dones, dejándome equipar y poniendo el 100 %.</span>
+          </label>
+          <label class="compromiso">
+            <input type="checkbox" name="compromiso" />
+            <span class="check" aria-hidden="true"></span>
+            <span><b>Apoyar la misión de la iglesia</b> asistiendo con fidelidad a las reuniones, viviendo para reflejar a Jesús y apoyando económicamente a la misión.</span>
+          </label>
+        </div>
+        <small class="error" data-para="commitments"></small>
+      </section>
+
+      <input class="trampa" id="website" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="error general" id="error-general" role="alert" hidden></p>
+      <button class="btn primario grande" id="enviar" type="submit">Quiero ser parte de Casa Nueva</button>
+    </form>
+  </main>
+
+  <main id="gracias" class="vista" hidden>
+    <section class="hero centro">
+      <img class="iso-grande" src="assets/isologo-blanco.png" alt="" width="72" height="72" />
+      <p class="eyebrow">¡Bienvenida y bienvenido!</p>
+      <h1 id="gracias-titulo">¡Ya sos parte de <span>Casa Nueva!</span></h1>
+      <p class="lead">Recibimos tu decisión. Gracias por sumarte a lo que Dios está haciendo en medio nuestro: pronto alguien del equipo se va a comunicar con vos.</p>
+      <div class="card siguiente">
+        <p class="eyebrow oscuro">Tu próximo paso</p>
+        <h2>Descubrí tus dones</h2>
+        <p>Uno de tus compromisos es servir descubriendo tus dones. Hacé el test: son unos minutos y te sugiere dónde podrías servir.</p>
+        <a class="btn primario grande" href="https://casanueva-test-dones.vercel.app">Hacer el test de dones</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
