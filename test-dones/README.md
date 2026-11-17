@@ -13,3 +13,5 @@ Sitio estático e independiente de Casa Suite (no toca el sistema). Digitaliza e
 
 Para editar textos, definiciones o la relación dones → áreas: `data.js`.
 Para probar en local: `python3 -m http.server` dentro de esta carpeta.
+
+Publicar en la VPS (https://dones.somoscasasuite.app): `bash publicar-sitios.sh test-dones` desde la raíz del repositorio.

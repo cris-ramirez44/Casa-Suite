@@ -7,3 +7,5 @@ lo ven en Casa Suite → Personas → «Se sumaron por el formulario».
 Mismas preguntas que el formulario anterior (nombre y apellido por separado para poder identificar a la persona).
 Sin conexión, el envío queda guardado en el teléfono y se reintenta al volver a abrir la página.
 Para probar en local: `python3 -m http.server` dentro de esta carpeta.
+
+Publicar en la VPS (https://sumate.somoscasasuite.app): `bash publicar-sitios.sh sumate` desde la raíz del repositorio.
